@@ -56,7 +56,7 @@ public class IndentationChecker{
         }
         catch (FileNotFoundException e) 
         {
-            System.out.println("Can't open file: "+fileName);
+            System.out.println("Can't open file: " + fileName);
         }
         finally
         {
@@ -70,9 +70,9 @@ public class IndentationChecker{
 
         IndentationChecker IndentationChecker = new IndentationChecker();
         
-        for (int i=0; i < args.length; i++)
+        for (int i = 0; i < args.length; i++)
         {
-            System.out.println("Processing file: " + args[i]);
+            System.out.println("Checking for proper indentation of file: " + args[i]);
             IndentationChecker.checkIndentation(args[i]);        
         }
 
