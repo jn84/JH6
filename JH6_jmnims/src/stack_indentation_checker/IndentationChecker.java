@@ -13,56 +13,70 @@ class BadIndentationException extends RuntimeException
     }
 }
 
-public class IndentationChecker{
+public class IndentationChecker
+{
     Stack<Integer> indentStack = new Stack<Integer>();
     
     private int findFirstNonBlank(String line)
     {
-        // return index of first non-blank character
-        // return -1 if the line doesn't contain a non-blank character
+    	for (int i = 0; i < line.length(); i++)
+    		if (line.charAt(i) != ' ')
+    			return i;
     	return -1;
     }
     
-    private void processLine(String line, int lineNumber)
+    private void processLine(String line, int lineNumber) throws BadIndentationException
     {
         int index = findFirstNonBlank(line);
+        System.out.println(String.format("%03d", lineNumber) + ": " + line);
         
-       // Skip blank lines ... i.e. return immediately
+        if (index < 0)
+        	return;
        
-       // If the stack is empty, then push this index onto the stack and return        
+       if (indentStack.isEmpty())
+    	   indentStack.push(index);
         
-       // If this index > than the top of the stack, then push this index onto the stack and return        
-        
-       // Pop off all Indentation indexes > index
-                
-       // At his point the top of the stack should match the current index.  If it 
-       // doesn't throw a BadIndentationException.  In the error message, include the source Line Number
-                    
+       else if (index > indentStack.peek())
+    	   indentStack.push(index);
+
+       while (index < indentStack.peek())
+    	   indentStack.pop();
+       
+       if (index != indentStack.peek())
+    	   throw new BadIndentationException("Index mismatch at line " + lineNumber);
     }
     
     public void checkIndentation(String fileName)
     {
-        // Clear the stack
-        
         Scanner input = null;
-        try {
+    	
+        indentStack.clear();
+    	
+        try 
+        {
             input = new Scanner (new File(fileName));
-            // read through the file line by line 
-            // for each line, call processLine to check indentation
+            for (int i = 1; input.hasNextLine(); i++)
+            	processLine(input.nextLine(), i);
         } 
         catch (BadIndentationException error)
         {
             System.out.println(error);
+            System.out.println("******* " + fileName + " is NOT properly indented\n");
+            return;
         }
         catch (FileNotFoundException e) 
         {
-            System.out.println("Can't open file: " + fileName);
+            System.out.println("Can't open file: " + fileName + "\n");
+            System.out.println();
+            return;
         }
         finally
         {
             if (input != null)
                 input.close();
         }
+        
+        System.out.println("******* " + fileName + " is properly indented\n");
     }
     
     
