@@ -50,15 +50,19 @@ public class SpellChecker
 		Scanner userInput = new Scanner(System.in);
 		String line = "", 
 				word = "", 
+				wordTrimmed = "",
 				result = "";
-
+		
+		boolean printed = false;
+		
 		System.out.println("======== Spell checking " + fileName + " =========");
 
 		// Clear miss_spelled_words
 		bad_spellings.clear();
 
-		while (scan.hasNextLine())
+		for (int lineNum = 1; scan.hasNextLine(); lineNum++)
 		{
+			printed = false;
 			line = scan.nextLine();
 			StringTokenizer st = new StringTokenizer(line, " \t,.;:-%'\"");
 
@@ -71,9 +75,16 @@ public class SpellChecker
 						bad_spellings.contains(word))
 					continue;
 
-				word = trimTrailing_S(word);
-				if (dictionary.contains(word) || bad_spellings.contains(word))
+				wordTrimmed = trimTrailing_S(word);
+				if (dictionary.contains(wordTrimmed) || bad_spellings.contains(wordTrimmed))
 					continue;
+				
+				// Lazy workaround to make the line only print once, even for multiple spelling errors in the line
+				if (!printed)
+				{
+					System.out.println(String.format("%03d", lineNum) + ": " + line);
+					printed = true;
+				}
 				
 				do
 				{
@@ -90,12 +101,12 @@ public class SpellChecker
 				if (result.equals("y"))
 				{
 					dictionary.add(word);
-					System.out.println("\"" + word + "\"" + " added to dictionary.");
+					System.out.println("\"" + word + "\"" + " added to dictionary.\n");
 				}
 				else
 				{
 					bad_spellings.add(word);
-					System.out.println("\"" + word + "\"" + " added to mis-spelled words list.");
+					System.out.println("\"" + word + "\"" + " added to mis-spelled words list.\n");
 				}
 			}
 		}
