@@ -20,7 +20,8 @@ public class IndentationChecker
     private int findFirstNonBlank(String line)
     {
     	for (int i = 0; i < line.length(); i++)
-    		if (line.charAt(i) != ' ')
+    		// It's given that all files are tabbed with only spaces
+    		if (!Character.isWhitespace(line.charAt(i)))
     			return i;
     	return -1;
     }

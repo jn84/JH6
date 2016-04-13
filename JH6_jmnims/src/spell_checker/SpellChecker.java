@@ -45,9 +45,10 @@ public class SpellChecker
 	{
 		Scanner scan = new Scanner(new File(fileName)); // can throw FileNotFoundException
 		Scanner userInput = new Scanner(System.in);
-		String line = "", word = "", wordTrimmed = "";
-		String result = "";
-		boolean addWordToDictionary = false;
+		String line = "", 
+				word = "", 
+				wordTrimmed = "",
+				result = "";
 
 		System.out.println("======== Spell checking " + fileName + " =========");
 
@@ -58,7 +59,7 @@ public class SpellChecker
 		{
 			line = scan.nextLine();
 			StringTokenizer st = new StringTokenizer(line, " \t,.;:-%'\"");
-			
+
 			while (st.hasMoreTokens())
 			{
 				word = st.nextToken().toLowerCase().trim();
@@ -75,14 +76,14 @@ public class SpellChecker
 				{
 					System.out.println("\"" + word + "\"" + " was not found in the dictionary. Do you want to add it (y/n): ");
 					result = userInput.nextLine().toLowerCase().trim();
-					
+
 					// Eclipse bug? The program wouldn't break out of this loop until I added these lines in order to debug.
 					// After adding them, it worked fine. After commenting them, it continued working.
 					// I left them in, in case the problem occurred again. I'm really not sure what the issue was.
 					//System.out.println("Is equal to \"y\": " + (result.equals("y") ? "yes" : "no"));
 					//System.out.println("Is equal to \"n\": " + (result.equals("n") ? "yes" : "no"));
 				} while (!result.equals("y") && !result.equals("n"));
-				
+
 				if (result.equals("y"))
 				{
 					dictionary.add(word);
@@ -94,10 +95,11 @@ public class SpellChecker
 					System.out.println("\"" + word + "\"" + " added to mis-spelled words list.");
 				}
 			}
-
 		}
-
-
+		
+		// Can't be null if we made it here.
+		scan.close();
+		userInput.close();
 	}
 
 	private boolean isFirstCharAlphabet(String word)
@@ -106,7 +108,7 @@ public class SpellChecker
 			return false;
 		return Character.isLetter(word.charAt(0));
 	}
-	
+
 	private String trimTrailing_S(String word)
 	{
 		if (word.isEmpty())
@@ -115,8 +117,8 @@ public class SpellChecker
 			return word.substring(0, word.length() - 1);
 		return word;
 	}
-	
-	
+
+
 
 	// Print out the misspelled words
 	public void printBadSpellings()
