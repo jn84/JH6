@@ -44,10 +44,12 @@ public class SpellChecker
 	public void checkSpelling(String fileName) throws FileNotFoundException
 	{
 		Scanner scan = new Scanner(new File(fileName)); // can throw FileNotFoundException
+		
+		// Since we're not using close() on this.
+		@SuppressWarnings("resource")
 		Scanner userInput = new Scanner(System.in);
 		String line = "", 
 				word = "", 
-				wordTrimmed = "",
 				result = "";
 
 		System.out.println("======== Spell checking " + fileName + " =========");
@@ -69,9 +71,10 @@ public class SpellChecker
 						bad_spellings.contains(word))
 					continue;
 
-				wordTrimmed = trimTrailing_S(word);
-				if (dictionary.contains(wordTrimmed) || bad_spellings.contains(wordTrimmed))
+				word = trimTrailing_S(word);
+				if (dictionary.contains(word) || bad_spellings.contains(word))
 					continue;
+				
 				do
 				{
 					System.out.println("\"" + word + "\"" + " was not found in the dictionary. Do you want to add it (y/n): ");
@@ -97,9 +100,10 @@ public class SpellChecker
 			}
 		}
 		
-		// Can't be null if we made it here.
 		scan.close();
-		userInput.close();
+		
+		// If we do this, it will close System.in and cause problems.
+		//	userInput.close();
 	}
 
 	private boolean isFirstCharAlphabet(String word)
@@ -136,7 +140,6 @@ public class SpellChecker
 
 	public static void main(String[] args) 
 	{
-		System.out.println(System.getProperty("user.dir"));
 		try 
 		{
 			// New SpellChecker object
